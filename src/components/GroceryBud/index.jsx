@@ -42,10 +42,9 @@ function GroceryBud() {
             setData(JSON.parse(storeState));
         }
     }, []);
-
+    
     useEffect(()=>{
         const storeState = localStorage.getItem("localKey");
-        localStorage.clear();
         if (storeState?.length > 0) {
             localStorage.setItem("localKey", JSON.stringify([...JSON.parse(storeState), ...data]));
         } else {
@@ -59,7 +58,7 @@ function GroceryBud() {
             <h1 className='text-center mt-10 mb-6 text-4xl'>Grocery Bud</h1>
             <div className='flex justify-center m-4 ml-20'>
                 <input type='text' value={text} onChange={(e) => setText(e.target.value)}
-                    className='border border-black rounded px-8 '
+                    className='border border-black rounded px-8'
                 />
                 <button 
                     onClick={() => handleClick(text)}
