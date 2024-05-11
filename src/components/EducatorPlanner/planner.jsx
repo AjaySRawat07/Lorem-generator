@@ -1,25 +1,38 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 const Planner  = () =>{
     const [state,setState] = useState([]);
     const [text,setText] = useState("");
     const [time, setTime] = useState("");
+    
+     useEffect(() => {
+        const storeState = localStorage.getItem("localValue");
+        if (storeState) {
+            setState(JSON.parse(storeState));
+        }
+    }, []);
 
     function handleClick(text,time){
+        if(text != "" && time != ""){
         setState([...state, 
             {
               id:Date.now(), text , time 
             }])
+         setText("") 
+         setTime("")
+        }
+        localStorage.setItem("localValue",JSON.stringify(state));
     }
 
     function incrementTime(id){
         setState(prevState => prevState.map(data=>
-            data.id === id ? {...data,time:data.time+1} : data)
+            data.id === id ? {...data,time:Number(data.time)+1} : data)
         )
     }
     
     function decrementTime(id){
-        setState(prevState => prevState.map(data => data.id === id && data.time > 0? {...data,time:data.time-1}:data)
+        setState(prevState => prevState.map(data =>
+             data.id === id && data.time > 0? {...data,time:Number(data.time)-1}:data)
         )
     }
     
@@ -40,7 +53,7 @@ const Planner  = () =>{
                 {state.map((data)=> (
                     <ul className="flex justify-center items-center gap-2 my-4">
                         <li key={data.id}  className="border border-black rounded px-2"> {data.text}</li>
-                        <li key={data.id} className="border border-black rounded px-2">{data.time}time</li>
+                        <li key={data.id} className="border border-black rounded px-2">{data.time} hours</li>
                         <p 
                         className="border border-black px-2 rounded-lg"
                         onClick={()=>incrementTime(data.id)}
